@@ -82,13 +82,13 @@ export default function App() {
     setItems([]);
   }
 
-  async function handleMint(title: string, medium: string) {
+  async function handleMint(title: string, medium: string, imageUrl: string) {
     if (!address) return;
     setMinting(true);
     setErrorMessage(null);
     setTxHash(null);
     try {
-      const { hash, item } = await mintItem(address, title, medium, setTxStatus);
+      const { hash, item } = await mintItem(address, title, medium, imageUrl, setTxStatus);
       setTxHash(hash);
       setItems((prev) => (prev.some((p) => p.id === item.id) ? prev : [item, ...prev]));
       setNewestId(item.id);

@@ -26,6 +26,7 @@ export interface GalleryItem {
   id: number;
   title: string;
   medium: string;
+  imageUrl: string;
   creator: string;
   owner: string;
   mintedAt: number;
@@ -69,6 +70,7 @@ function mapItem(raw: any): GalleryItem {
     id: Number(raw.id),
     title: raw.title,
     medium: raw.medium,
+    imageUrl: raw.image_url,
     creator: raw.creator,
     owner: raw.owner,
     mintedAt: Number(raw.minted_at),
@@ -108,6 +110,7 @@ export async function mintItem(
   publicKey: string,
   title: string,
   medium: string,
+  imageUrl: string,
   onStatus: (status: TxStatus) => void
 ): Promise<{ hash: string; item: GalleryItem }> {
   onStatus("building");
@@ -118,9 +121,10 @@ export async function mintItem(
   const ownerScVal = nativeToScVal(publicKey, { type: "address" });
   const titleScVal = nativeToScVal(title, { type: "string" });
   const mediumScVal = nativeToScVal(medium, { type: "string" });
+  const imageUrlScVal = nativeToScVal(imageUrl, { type: "string" });
 
   let tx = new TransactionBuilder(account, { fee: BASE_FEE, networkPassphrase: NETWORK_PASSPHRASE })
-    .addOperation(contract.call("mint", ownerScVal, titleScVal, mediumScVal))
+    .addOperation(contract.call("mint", ownerScVal, titleScVal, mediumScVal, imageUrlScVal))
     .setTimeout(60)
     .build();
 

@@ -23,6 +23,7 @@ pub struct Item {
     pub id: u64,
     pub title: String,
     pub medium: String,
+    pub image_url: String,
     pub creator: Address,
     pub owner: Address,
     pub minted_at: u64,
@@ -41,6 +42,7 @@ const XFER_EVENT: Symbol = symbol_short!("xfer");
 
 const MAX_TITLE_LEN: u32 = 80;
 const MAX_MEDIUM_LEN: u32 = 40;
+const MAX_IMAGE_URL_LEN: u32 = 200;
 
 #[contract]
 pub struct VitrineContract;
@@ -63,7 +65,7 @@ impl VitrineContract {
     /// Mint a new item. `owner` becomes both creator and first owner —
     /// requires `owner`'s signature so it's genuinely the connected
     /// wallet minting, not an admin minting on someone's behalf.
-    pub fn mint(env: Env, owner: Address, title: String, medium: String) -> u64 {
+    pub fn mint(env: Env, owner: Address, title: String, medium: String, image_url: String) -> u64 {
         owner.require_auth();
 
         if title.len() == 0 || title.len() > MAX_TITLE_LEN {
@@ -71,6 +73,9 @@ impl VitrineContract {
         }
         if medium.len() == 0 || medium.len() > MAX_MEDIUM_LEN {
             panic!("medium must be 1-40 characters");
+        }
+        if image_url.len() == 0 || image_url.len() > MAX_IMAGE_URL_LEN {
+            panic!("image_url must be 1-200 characters");
         }
 
         let mut supply: u64 = env
@@ -84,6 +89,7 @@ impl VitrineContract {
             id,
             title,
             medium,
+            image_url,
             creator: owner.clone(),
             owner: owner.clone(),
             minted_at: env.ledger().timestamp(),

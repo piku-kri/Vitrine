@@ -19,8 +19,8 @@ fn test_mint_assigns_sequential_ids_and_ownership() {
     let (client, _admin) = setup(&env);
 
     let artist = Address::generate(&env);
-    let id1 = client.mint(&artist, &String::from_str(&env, "Sunset No. 1"), &String::from_str(&env, "oil on canvas"));
-    let id2 = client.mint(&artist, &String::from_str(&env, "Sunset No. 2"), &String::from_str(&env, "oil on canvas"));
+    let id1 = client.mint(&artist, &String::from_str(&env, "Sunset No. 1"), &String::from_str(&env, "oil on canvas"), &String::from_str(&env, "https://example.com/1.jpg"));
+    let id2 = client.mint(&artist, &String::from_str(&env, "Sunset No. 2"), &String::from_str(&env, "oil on canvas"), &String::from_str(&env, "https://example.com/2.jpg"));
 
     assert_eq!(id1, 0);
     assert_eq!(id2, 1);
@@ -38,7 +38,7 @@ fn test_empty_title_rejected() {
     let (client, _admin) = setup(&env);
 
     let artist = Address::generate(&env);
-    let result = client.try_mint(&artist, &String::from_str(&env, ""), &String::from_str(&env, "ink"));
+    let result = client.try_mint(&artist, &String::from_str(&env, ""), &String::from_str(&env, "ink"), &String::from_str(&env, "https://example.com/3.jpg"));
     assert!(result.is_err());
 }
 
@@ -50,7 +50,7 @@ fn test_transfer_changes_owner() {
 
     let artist = Address::generate(&env);
     let collector = Address::generate(&env);
-    let id = client.mint(&artist, &String::from_str(&env, "Study in Blue"), &String::from_str(&env, "watercolor"));
+    let id = client.mint(&artist, &String::from_str(&env, "Study in Blue"), &String::from_str(&env, "watercolor"), &String::from_str(&env, "https://example.com/4.jpg"));
 
     client.transfer(&artist, &collector, &id);
 
@@ -68,7 +68,7 @@ fn test_non_owner_cannot_transfer() {
     let artist = Address::generate(&env);
     let stranger = Address::generate(&env);
     let collector = Address::generate(&env);
-    let id = client.mint(&artist, &String::from_str(&env, "Study in Blue"), &String::from_str(&env, "watercolor"));
+    let id = client.mint(&artist, &String::from_str(&env, "Study in Blue"), &String::from_str(&env, "watercolor"), &String::from_str(&env, "https://example.com/5.jpg"));
 
     let result = client.try_transfer(&stranger, &collector, &id);
     assert!(result.is_err());

@@ -25,7 +25,11 @@ export function GalleryCard({ item, isNew }: GalleryCardProps) {
     <div className={`gallery-card${revealing ? " gallery-card--reveal" : ""}`}>
       {revealing && <span className="gallery-card__spotlight" />}
       <div className="gallery-card__frame">
-        <span className="gallery-card__id">No. {String(item.id).padStart(3, "0")}</span>
+        {item.imageUrl ? (
+          <img src={item.imageUrl} alt={item.title} className="gallery-card__image" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        ) : (
+          <span className="gallery-card__id">No. {String(item.id).padStart(3, "0")}</span>
+        )}
       </div>
       <div className="gallery-card__plaque">
         <div className="gallery-card__title">{item.title}</div>

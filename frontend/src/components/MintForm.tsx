@@ -3,20 +3,22 @@ import { useState } from "react";
 interface MintFormProps {
   connected: boolean;
   minting: boolean;
-  onMint: (title: string, medium: string) => void;
+  onMint: (title: string, medium: string, imageUrl: string) => void;
 }
 
 export function MintForm({ connected, minting, onMint }: MintFormProps) {
   const [title, setTitle] = useState("");
   const [medium, setMedium] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
 
-  const valid = title.trim().length > 0 && title.length <= 80 && medium.trim().length > 0 && medium.length <= 40;
+  const valid = title.trim().length > 0 && title.length <= 80 && medium.trim().length > 0 && medium.length <= 40 && imageUrl.trim().length > 0 && imageUrl.length <= 200;
 
   function submit() {
     if (!valid) return;
-    onMint(title.trim(), medium.trim());
+    onMint(title.trim(), medium.trim(), imageUrl.trim());
     setTitle("");
     setMedium("");
+    setImageUrl("");
   }
 
   return (
@@ -36,6 +38,14 @@ export function MintForm({ connected, minting, onMint }: MintFormProps) {
         value={medium}
         maxLength={40}
         onChange={(e) => setMedium(e.target.value)}
+        disabled={!connected || minting}
+      />
+      <input
+        className="mint-form__input"
+        placeholder="Image URL (e.g. https://imgur.com/...)"
+        value={imageUrl}
+        maxLength={200}
+        onChange={(e) => setImageUrl(e.target.value)}
         disabled={!connected || minting}
       />
       <button className="gallery-btn" onClick={submit} disabled={!connected || minting || !valid}>
