@@ -115,7 +115,7 @@ export async function mintItem(
 
   const account = await loadAccount(publicKey);
   const contract = new Contract(CONTRACT_ID);
-  const ownerScVal = nativeToScVal(Address.fromString(publicKey), { type: "address" });
+  const ownerScVal = nativeToScVal(publicKey, { type: "address" });
   const titleScVal = nativeToScVal(title, { type: "string" });
   const mediumScVal = nativeToScVal(medium, { type: "string" });
 
